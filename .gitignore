@@ -1,0 +1,8 @@
+.vs
+algorithm_problems
+Debug
+Release
+ipch
+*.opensdf
+*.sdf
+*.sln
