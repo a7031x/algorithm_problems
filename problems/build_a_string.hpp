@@ -1,14 +1,16 @@
 #pragma once
+#include <iostream>
 #include <vector>
 #include <string>
 #include <memory>
 #include <unordered_map>
 #include <functional>
 #include <stack>
+#include <algorithm>
 
-namespace algorithm_lib
+namespace build_a_string
 {
-	class suffix_tree_t
+	class build_a_string_t
 	{
 	private:
 		class node_t
@@ -27,16 +29,22 @@ namespace algorithm_lib
 	private:
 		nodeptr _root;
 		std::string _text;
-
+		std::vector<int64_t> _cost;
+		int64_t _cost_a;
+		int64_t _cost_b;
 	public:
-		suffix_tree_t(const std::string& text)
+		build_a_string_t(int64_t a, int64_t b, const std::string& text)
 			: _text(text)
 			, _root(std::make_shared<node_t>(-1, nullptr))
+			, _cost_a(a)
+			, _cost_b(b)
+			, _cost(text.size() + 1, INT64_MAX)
 		{
 			size_t suffix_count = 0;
 			auto end = std::make_shared<size_t>(text.size());
 			size_t active_depth = 0;
 			nodeptr active_node = _root;
+			_cost[0] = 0;
 			for (size_t k = 0; k < text.size(); ++k)
 			{
 				++suffix_count;
@@ -46,91 +54,15 @@ namespace algorithm_lib
 					active_depth = 0;
 					active_node = _root;
 				} while (--suffix_count);
+				_cost[k + 1] = std::min(_cost[k + 1], _cost[k] + _cost_a);
 			}
 		}
 
-		std::string max_repeated_substring()
+		int64_t cost(size_t index)const
 		{
-			std::string max_path;
-			size_t max_length = 0;
-
-			traverse([&](
-				const std::string& path,
-				size_t path_length,
-				size_t start,
-				size_t end,
-				const std::vector<size_t>& children_starts)
-			{
-				if (path_length > max_length)
-				{
-					max_length = path_length;
-					max_path = path;
-				}
-			});
-
-			return full_path(max_path);
+			return _cost[index];
 		}
 
-		std::string full_path(const std::string& path)
-		{
-			auto node = _root;
-			std::string r;
-			for (auto c : path)
-			{
-				auto child = node->children[c];
-				r += _text.substr(child->start, *child->end - child->start);
-				node = child;
-			}
-			return r;
-		}
-
-		void traverse(const std::function<void(
-			const std::string& path,
-			size_t path_length,
-			size_t start,
-			size_t end,
-			const std::vector<size_t>& children_starts)>& callback)
-		{
-			struct item_t
-			{
-				std::string path;
-				size_t length;
-				nodeptr node;
-				item_t(const std::string& path, size_t length, nodeptr node)
-					: path(path), length(length), node(node)
-				{}
-				item_t(item_t&& other)
-				{
-					path = std::move(other.path);
-					length = other.length;
-					node = std::move(other.node);
-				}
-			};
-
-			std::stack<item_t> queue;
-			queue.push(item_t("", 0, _root));
-
-			while (!queue.empty())
-			{
-				auto parent = std::move(queue.top());
-				queue.pop();
-
-				std::vector<size_t> starts;
-				for (auto child : parent.node->children)
-				{
-					starts.push_back(child.second->start);
-					if (child.second->children.size() == 0)
-						continue;
-					queue.push(
-						item_t(
-							parent.path + child.first,
-							parent.length + *child.second->end - child.second->start,
-							child.second));
-				}
-				if (parent.node != _root)
-					callback(parent.path, parent.length, parent.node->start, *parent.node->end, starts);
-			}
-		}
 	private:
 		nodeptr create_internal_node(nodeptr parent, nodeptr child, size_t depth, size_t pos, nodeptr leaf)
 		{
@@ -144,7 +76,7 @@ namespace algorithm_lib
 			return internal_node;
 		}
 
-		bool create_internal_node(nodeptr& active_node, size_t& active_depth, size_t depth, size_t pos, std::shared_ptr<size_t> end)
+		bool create_internal_node(nodeptr& active_node, size_t& active_depth, size_t depth, size_t pos, const std::shared_ptr<size_t>& end)
 		{
 			nodeptr child;
 			nodeptr parent = _root;
@@ -156,7 +88,7 @@ namespace algorithm_lib
 				parent = active_node;
 				depth -= active_depth;
 			}
-			
+
 			while (child = parent->children[_text[pos - depth]])
 			{
 				auto edge_length = *child->end - child->start;
@@ -166,6 +98,24 @@ namespace algorithm_lib
 					{
 						active_node = parent;
 						active_depth = saved_depth - depth;
+						auto total_length = pos - child->start - depth + saved_depth + 1;
+						int64_t length;
+						if (total_length >= (saved_depth + 1) * 2)
+							length = saved_depth + 1;
+						else
+						{
+							auto pattern = pos - child->start - depth;
+							auto mid = (total_length + 1) / 2;
+							mid = std::min(mid, total_length + depth - saved_depth);
+							auto right_start = (pattern - 1 + mid) / pattern * pattern;
+							length = std::max(total_length - right_start, pattern);
+						}
+						_cost[pos + 1] = std::min(
+						{
+							_cost[pos + 1],
+							_cost[pos + 1 - (size_t)length] + length * _cost_a,
+							_cost[pos + 1 - (size_t)length] + _cost_b
+						});
 						return false;
 					}
 					auto internal_node = create_internal_node(parent, child, depth, pos, new_leaf);
@@ -173,9 +123,28 @@ namespace algorithm_lib
 				}
 				depth -= edge_length;
 				parent = child;
+
 			}
 			parent->children[_text[pos - depth]] = new_leaf;
 			return true;
 		}
 	};
+
+	inline int64_t solve(int64_t a, int64_t b, const std::string& text)
+	{
+		return build_a_string_t(a, b, text).cost(text.size());
+	}
+
+	inline void solve()
+	{
+		int t;
+		std::cin >> t;
+		while (t--)
+		{
+			int a, b, c;
+			std::string s;
+			std::cin >> c >> a >> b >> s;
+			std::cout << solve(a, b, s) << std::endl;
+		}
+	}
 }
