@@ -3,6 +3,7 @@
 #include <functional>
 #include <vector>
 #include <string>
+#include <fstream>
 
 namespace console
 {
@@ -40,5 +41,11 @@ namespace console
 		int n;
 		std::cin >> n;
 		return s();
+	}
+
+	inline void redirect(const std::string& file)
+	{
+		static std::ifstream ins(file);
+		std::cin.rdbuf(ins.rdbuf());
 	}
 }

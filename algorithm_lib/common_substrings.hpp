@@ -12,7 +12,7 @@ namespace algorithm_lib
 		std::string _b;
 
 	public:
-		int64_t count(size_t start_a, size_t start_b)const
+		int64_t count_with_cache(size_t start_a, size_t start_b)const
 		{
 			if (_a.size() == start_a || _b.size() == start_b)
 				return 0;
@@ -22,11 +22,12 @@ namespace algorithm_lib
 				return cache;
 			if (_a[start_a] == _b[start_b])
 			{
-				cache = 1 + count(start_a + 1, start_b) + count(start_a, start_b + 1);
+				cache = 1 + count_with_cache(start_a + 1, start_b) + count_with_cache(start_a, start_b + 1);
 			}
 			else
 			{
-				cache = count(start_a + 1, start_b) + count(start_a, start_b + 1) - count(start_a + 1, start_b + 1);
+				cache = count_with_cache(start_a + 1, start_b)
+					+ count_with_cache(start_a, start_b + 1) - count_with_cache(start_a + 1, start_b + 1);
 			}
 			cache = module(cache);
 			return cache;
@@ -38,7 +39,7 @@ namespace algorithm_lib
 			_cache.resize(a.size(), std::vector<int64_t>(b.size(), -1));
 			_a = a;
 			_b = b;
-			return count(0, 0);
+			return count_with_cache(0, 0);
 		}
 
 	private:
