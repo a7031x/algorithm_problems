@@ -48,4 +48,10 @@ namespace console
 		static std::ifstream ins(file);
 		std::cin.rdbuf(ins.rdbuf());
 	}
+
+	template<typename T = int64_t, int MOD = 1000000007>
+	inline T mod(T v)
+	{
+		return v % MOD;
+	}
 }
