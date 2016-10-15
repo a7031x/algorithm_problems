@@ -22,9 +22,6 @@ namespace short_palindrome
 		int64_t sum = 0;
 		for (char c = 0; c < 26; ++c)
 		{
-			if (2 > position[c].size())
-				continue;
-
 			for (char d = 0; d < 26; ++d)
 			{
 				int64_t F = 0;
@@ -42,7 +39,7 @@ namespace short_palindrome
 					}
 					else
 					{
-						F += (k - 1) * (k - 2) / 2;
+						F = console::mod(F + (k - 1) * (k - 2) / 2);
 					}
 					sum = console::mod(sum + F);
 				}
