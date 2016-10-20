@@ -19,7 +19,15 @@ namespace two_strings_game2
 			size_t length = 0;
 			size_t link = -1;
 			int grundy_value = -1;
-			int64_t grundy_sum[27] = { 0 };
+			std::map<char, int64_t> grundy_sum;
+			int64_t get_grundy_sum(char v)const
+			{
+				auto it = grundy_sum.find(v);
+				if (grundy_sum.end() == it)
+					return 0;
+				else
+					return it->second;
+			}
 			std::map<char, size_t> next;
 		};
 
@@ -105,8 +113,8 @@ namespace two_strings_game2
 				{
 					auto& next = _states[kv.second];
 					mark[next.grundy_value] = true;
-					for (size_t k = 0; k < 27; ++k)
-						state->grundy_sum[k] += next.grundy_sum[k];
+					for (auto& kv : next.grundy_sum)
+						state->grundy_sum[kv.first] += kv.second;
 				}
 				for (size_t grundy_value = 0; grundy_value < sizeof(mark); ++grundy_value)
 					if (!mark[grundy_value])
@@ -129,7 +137,7 @@ namespace two_strings_game2
 			while (true)
 			{
 				const state_t& root_b = sb._states[0];
-				int64_t strings = counts[0] - root_b.grundy_sum[sa._states[left_index].grundy_value];
+				int64_t strings = counts[0] - root_b.get_grundy_sum(sa._states[left_index].grundy_value);
 				if (strings >= k)
 					break;
 				k -= strings;
@@ -140,10 +148,10 @@ namespace two_strings_game2
 					const state_t& state = sa._states[kv.second];
 					int64_t total = 0;
 					left_index = kv.second;
-					for (size_t gv = 0; gv < 27; ++gv)
+					for (auto kv : state.grundy_sum)
 					{
-						int64_t count0 = state.grundy_sum[gv];
-						int64_t count1 = counts[0] - root_b.grundy_sum[gv];
+						int64_t count0 = kv.second;
+						int64_t count1 = counts[0] - root_b.get_grundy_sum(kv.first);
 						int64_t strings = count0 * count1;
 						if (0 != count0 && strings / count0 != count1)
 							total = k + 1;
@@ -180,7 +188,7 @@ namespace two_strings_game2
 				for (auto& kv : state.next)
 				{
 					const state_t& child = sb._states[kv.second];
-					int64_t strings = counts[kv.second] - child.grundy_sum[grundy_value];
+					int64_t strings = counts[kv.second] - child.get_grundy_sum(grundy_value);
 					if (strings >= k)
 					{
 						right_index = kv.second;
@@ -190,7 +198,7 @@ namespace two_strings_game2
 					k -= strings;
 				}
 			}
-		//	std::cout << sizeof(state_t) << std::endl;
+
 			return std::make_pair(ra, rb);
 		}
 
@@ -250,7 +258,7 @@ namespace two_strings_game
 	class suffix_tree_t
 	{
 	public:
-		enum state_t {none, win, lose, both};
+		enum state_t { none, win, lose, both };
 		class node_t
 		{
 		public:
@@ -845,7 +853,7 @@ namespace two_strings_game
 
 		suffix_tree_t::state_t state;
 		auto ra = traverse(ta, tb.none_counter(), tb.win_counter(), tb.lose_counter(), tb.both_counter(), k, state);
-		if(ra == "no solution")
+		if (ra == "no solution")
 			return std::pair<std::string, std::string>(ra, "");
 		auto rb = traverse(tb, state, k);
 		if (rb == "no solution")

@@ -45,7 +45,10 @@ namespace console
 
 	inline void redirect(const std::string& file)
 	{
-		static std::ifstream ins(file);
+		static std::ifstream ins;
+		if (ins.is_open())
+			ins.close();
+		ins.open(file);
 		std::cin.rdbuf(ins.rdbuf());
 	}
 
