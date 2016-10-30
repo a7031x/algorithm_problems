@@ -1,9 +1,10 @@
 #include <vector>
 #include <map>
+#include <algorithm>
 
 namespace algorithm_lib
 {
-	class suffix_automation_t
+	class suffix_automaton_t
 	{
 		struct state_t
 		{
@@ -13,17 +14,18 @@ namespace algorithm_lib
 		};
 
 		std::vector<state_t> _states;
+		std::vector<state_t*> _sorted_states;
 		size_t _last;
 
 	public:
-		suffix_automation_t()
+		suffix_automaton_t()
 		{
 			state_t start;
 			_states.push_back(start);
 			_last = 0;
 		}
 
-		suffix_automation_t(const std::string& s) : suffix_automation_t()
+		suffix_automaton_t(const std::string& s) : suffix_automaton_t()
 		{
 			extend(s);
 		}
@@ -32,6 +34,16 @@ namespace algorithm_lib
 		{
 			for (auto c : s)
 				extend_one(c);
+			_sorted_states.resize(_states.size());
+			for (size_t k = 0; k < _states.size(); ++k)
+			{
+				_sorted_states[k] = &_states[k];
+			}
+
+			std::sort(_sorted_states.begin(), _sorted_states.end(), [](const state_t* s0, const state_t* s1)
+			{
+				return s0->length > s1->length;
+			});
 		}
 
 		void extend_one(char c)
@@ -64,33 +76,28 @@ namespace algorithm_lib
 			_last = current;
 		}
 
-		int64_t all_substrings()const
+		std::vector<int64_t> all_substrings()const
 		{
 			std::vector<int64_t> cache(_states.size(), 0);
-			return all_substrings(cache, 0);
+			for (auto state : _sorted_states)
+			{
+				auto& c = cache[state - _states.data()];
+				c = 1;
+				for (auto& kv : state->next)
+					c += cache[kv.second];
+			}
+			return cache;
 		}
 
 		std::string kth_substring(int64_t k)const
 		{
-			std::vector<int64_t> cache(_states.size(), 0);
-			all_substrings(cache, 0);
+			auto cache = all_substrings();
 			std::string s;
 			kth_substring(cache, 0, k, s);
 			return s;
 		}
 
 	private:
-		int64_t all_substrings(std::vector<int64_t>& cache, size_t root)const
-		{
-			auto& c = cache[root];
-			if (c)
-				return c;
-			c = 1;
-			for (auto& kv : _states[root].next)
-				c += all_substrings(cache, kv.second);
-			return c;
-		}
-
 		void kth_substring(const std::vector<int64_t>& counts, size_t root, int64_t k, std::string& s)const
 		{
 			if (0 == k)

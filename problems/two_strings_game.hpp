@@ -18,7 +18,7 @@ assert("jagsjdhgkj", "dfsdfjhghs", 1287, "s", "fs");
 
 namespace two_strings_game
 {
-	class suffix_automation_t
+	class suffix_automaton_t
 	{
 		struct state_t
 		{
@@ -34,14 +34,14 @@ namespace two_strings_game
 		size_t _last;
 
 	public:
-		suffix_automation_t()
+		suffix_automaton_t()
 		{
 			state_t start;
 			_states.push_back(start);
 			_last = 0;
 		}
 
-		suffix_automation_t(const std::string& s) : suffix_automation_t()
+		suffix_automaton_t(const std::string& s) : suffix_automaton_t()
 		{
 			extend(s);
 			_sorted_states.resize(_states.size());
@@ -164,8 +164,8 @@ namespace two_strings_game
 
 		static std::pair<std::string, std::string> solve(const std::string& a, const std::string& b, int64_t k)
 		{
-			suffix_automation_t sa(a);
-			suffix_automation_t sb(b);
+			suffix_automaton_t sa(a);
+			suffix_automaton_t sb(b);
 
 			std::vector<int64_t> counts = sb.all_substrings();
 			auto grundy_sum_b = sb.root_grundy_sum();
@@ -273,7 +273,7 @@ namespace two_strings_game
 
 	static std::pair<std::string, std::string> solve(const std::string& a, const std::string& b, int64_t k)
 	{
-		return suffix_automation_t::solve(a, b, k);
+		return suffix_automaton_t::solve(a, b, k);
 	}
 
 	inline void solve()
@@ -283,7 +283,7 @@ namespace two_strings_game
 		std::cin >> a >> b >> k;
 		std::string sa, sb;
 		std::cin >> sa >> sb;
-		auto r = suffix_automation_t::solve(sa, sb, k);
+		auto r = suffix_automaton_t::solve(sa, sb, k);
 		if ("no" == r.first && "solution" == r.second)
 			std::cout << r.first << " " << r.second << std::endl;
 		else

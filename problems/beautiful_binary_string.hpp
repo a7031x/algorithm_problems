@@ -1,4 +1,4 @@
-#include <input_output.hpp>
+#include <console.hpp>
 #include <algorithm>
 
 namespace beautiful_binary_string

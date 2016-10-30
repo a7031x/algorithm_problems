@@ -1,5 +1,5 @@
 #include <binary_indexed_tree.hpp>
-#include <input_output.hpp>
+#include <console.hpp>
 
 namespace new_year_chaos
 {

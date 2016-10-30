@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <sstream>
 
 namespace console
 {
@@ -50,6 +51,14 @@ namespace console
 			ins.close();
 		ins.open(file);
 		std::cin.rdbuf(ins.rdbuf());
+	}
+
+	inline void redirect_string(const std::string& text)
+	{
+		static std::stringstream ss;
+		ss.clear();
+		ss << text;
+		std::cin.rdbuf(ss.rdbuf());
 	}
 
 	template<typename T = int64_t, int MOD = 1000000007>
