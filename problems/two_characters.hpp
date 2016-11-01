@@ -1,5 +1,4 @@
 //https://www.hackerrank.com/challenges/two-characters
-#pragma once
 #include <string>
 #include <iostream>
 #include <algorithm>

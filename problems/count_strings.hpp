@@ -1,4 +1,4 @@
-#pragma once
+//https://www.hackerrank.com/contests/master/challenges/count-strings
 #include <memory>
 #include <vector>
 #include <set>

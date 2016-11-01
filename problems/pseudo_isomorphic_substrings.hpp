@@ -1,3 +1,4 @@
+//https://www.hackerrank.com/contests/master/challenges/pseudo-isomorphic-substrings
 #include <memory>
 #include <iostream>
 #include <unordered_map>

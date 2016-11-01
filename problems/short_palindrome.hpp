@@ -1,3 +1,4 @@
+//https://www.hackerrank.com/contests/master/challenges/short-palindrome
 #include <iostream>
 #include <vector>
 #include <string>

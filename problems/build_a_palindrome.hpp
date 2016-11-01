@@ -1,4 +1,4 @@
-#pragma once
+//https://www.hackerrank.com/contests/master/challenges/challenging-palindromes
 #include <longest_palindromic_substring.hpp>
 #include <suffix_tree.hpp>
 #include <iostream>

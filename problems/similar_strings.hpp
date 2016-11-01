@@ -1,5 +1,4 @@
 //https://www.hackerrank.com/challenges/similar-strings
-#pragma once
 #include <memory>
 #include <iostream>
 #include <unordered_map>

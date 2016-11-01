@@ -1,4 +1,4 @@
-#pragma once
+//https://www.hackerrank.com/contests/master/challenges/build-a-string
 #include <iostream>
 #include <vector>
 #include <string>

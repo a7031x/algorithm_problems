@@ -1,5 +1,4 @@
 //https://www.hackerrank.com/challenges/reduced-string
-#pragma once
 #include <string>
 #include <iostream>
 

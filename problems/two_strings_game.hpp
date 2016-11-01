@@ -1,20 +1,9 @@
+//https://www.hackerrank.com/contests/master/challenges/two-strings-game
 #include <map>
 #include <string>
 #include <iostream>
 #include <vector>
 #include <algorithm>
-
-/*
-assert("aaa", "a", 4, "aaa", "");
-assert("ab", "ccd", 12, "ab", "cc");
-assert("aa", "aaa", 3, "a", "a");
-assert("ab", "cd", 5, "a", "cd");
-assert("ab", "ccd", 9, "a", "d");
-assert("", "", 1, "no", "solution");
-assert("aab", "ccd", 2, "", "ccd");
-assert("abc", "ab", 4, "a", "");
-assert("jagsjdhgkj", "dfsdfjhghs", 1287, "s", "fs");
-*/
 
 namespace two_strings_game
 {
@@ -304,5 +293,18 @@ namespace two_strings_game
 			std::cout << "--expect: " << t0 << " " << t1 << std::endl;
 			std::cout << "--actual: " << actual.first << " " << actual.second << std::endl;
 		}
+	}
+
+	inline void test()
+	{
+		assert("aaa", "a", 4, "aaa", "");
+		assert("ab", "ccd", 12, "ab", "cc");
+		assert("aa", "aaa", 3, "a", "a");
+		assert("ab", "cd", 5, "a", "cd");
+		assert("ab", "ccd", 9, "a", "d");
+		assert("", "", 1, "no", "solution");
+		assert("aab", "ccd", 2, "", "ccd");
+		assert("abc", "ab", 4, "a", "");
+		assert("jagsjdhgkj", "dfsdfjhghs", 1287, "s", "fs");
 	}
 }

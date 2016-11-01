@@ -1,3 +1,4 @@
+//https://www.hackerrank.com/contests/master/challenges/synchronous-shopping
 #include <iostream>
 #include <vector>
 #include <map>

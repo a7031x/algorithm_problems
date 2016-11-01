@@ -1,5 +1,4 @@
 //https://www.hackerrank.com/challenges/camelcase
-#pragma once
 #include <string>
 #include <iostream>
 #include <algorithm>

@@ -1,3 +1,4 @@
+//https://www.hackerrank.com/contests/master/challenges/richie-rich
 #include <iostream>
 #include <functional>
 #include <vector>

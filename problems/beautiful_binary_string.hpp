@@ -1,3 +1,4 @@
+//https://www.hackerrank.com/contests/master/challenges/beautiful-binary-string
 #include <console.hpp>
 #include <algorithm>
 
