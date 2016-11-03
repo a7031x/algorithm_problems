@@ -5,6 +5,7 @@
 #include <list>
 #include <algorithm>
 #include <reg_state_machine.hpp>
+#include <mod.hpp>
 
 namespace count_strings
 {
@@ -225,7 +226,6 @@ namespace count_strings
 
 	inline matrix_t multiply(const matrix_t& left, const matrix_t& right)
 	{
-		const int64_t module = 1000000007;
 		matrix_t m(left.size(), std::vector<int64_t>(right[0].size(), 0));
 		for (size_t i = 0; i < left.size(); ++i)
 		{
@@ -233,8 +233,8 @@ namespace count_strings
 			{
 				int64_t r = 0;
 				for (size_t k = 0; k < right.size(); ++k)
-					r += (left[i][k] * right[k][j]) % module;
-				m[i][j] = r % module;
+					r += algorithm_lib::mod(left[i][k] * right[k][j]);
+				m[i][j] = algorithm_lib::mod(r);
 			}
 		}
 		return m;
@@ -242,7 +242,6 @@ namespace count_strings
 
 	inline int64_t solve(const std::string& reg, size_t length)
 	{
-		const int64_t module = 1000000007;
 		nodeptr nullable = std::make_shared<node_t>(0);
 		auto expression = nfa(reg, nullable);
 		auto states = dfa(expression, nullable);
@@ -276,7 +275,7 @@ namespace count_strings
 		for (size_t k = 1; k < states.size(); ++k)
 			if (states[k]->terminal)
 				r += coef[0][k];
-		return r % module;
+		return algorithm_lib::mod(r);
 	}
 
 	inline void solve()

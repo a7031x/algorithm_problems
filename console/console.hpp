@@ -60,10 +60,4 @@ namespace console
 		ss << text;
 		std::cin.rdbuf(ss.rdbuf());
 	}
-
-	template<typename T = int64_t, int MOD = 1000000007>
-	inline T mod(T v)
-	{
-		return v % MOD;
-	}
 }

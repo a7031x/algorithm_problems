@@ -1,5 +1,6 @@
 #include <vector>
 #include <string>
+#include <mod.hpp>
 
 namespace algorithm_lib
 {
@@ -29,7 +30,7 @@ namespace algorithm_lib
 				cache = count_with_cache(start_a + 1, start_b)
 					+ count_with_cache(start_a, start_b + 1) - count_with_cache(start_a + 1, start_b + 1);
 			}
-			cache = module(cache);
+			cache = algorithm_lib::mod<int64_t, _Mod>(cache);
 			return cache;
 		}
 
@@ -40,12 +41,6 @@ namespace algorithm_lib
 			_a = a;
 			_b = b;
 			return count_with_cache(0, 0);
-		}
-
-	private:
-		int64_t module(int64_t value)const
-		{
-			return value % _Mod;
 		}
 	};
 }
