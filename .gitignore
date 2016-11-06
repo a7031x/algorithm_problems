@@ -8,3 +8,4 @@ ipch
 *.sln
 /algorithm_problems.VC.VC.opendb
 /algorithm_problems.VC.db
+*.vspx

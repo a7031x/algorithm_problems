@@ -1,4 +1,5 @@
 //https://www.hackerrank.com/challenges/littlepandapower
+//https://en.wikipedia.org/wiki/Modular_multiplicative_inverse
 #include <iostream>
 #include <mod.hpp>
 
