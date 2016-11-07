@@ -2,13 +2,13 @@
 //http://laurentmazare.github.io/2014/09/14/counting-coprime-pairs/
 //http://blog.csdn.net/a1s4z5/article/details/52738331
 //http://baike.baidu.com/link?url=4z6TSmOFuWdYMs2wQsSlcj3fOEYF7yX3_KMzQD7UEWDK5at9a4DbwJgmXASFa420u6Q-ZM1RCJmQo3cJAz7J5a
-
 #include <list>
 #include <vector>
 #include <set>
 #include <map>
 #include <algorithm>
 #include <iostream>
+#include <number_theory.hpp>
 
 namespace coprime_conundrum
 {
@@ -133,16 +133,6 @@ namespace coprime_conundrum
 		return r;
 	}
 
-	inline std::vector<int> calc_mobius(int n)
-	{
-		std::vector<int> r(n + 1, -1);
-		r[1] = 1;
-		for (int i = 2; i <= n; ++i)
-			for (int j = i * 2; j <= n; j += i)
-				r[j] -= r[i];
-		return r;
-	}
-
 	inline std::vector<std::vector<int>> calc_factors(const std::vector<int>& mu)
 	{
 		int n = (int)mu.size() - 1;
@@ -169,7 +159,7 @@ namespace coprime_conundrum
 	inline int64_t solve_mobius(int64_t n)
 	{
 		int sqrt_n = (int)sqrt(n);
-		auto mu = calc_mobius(sqrt_n);
+		auto mu = algorithm_lib::number_theory_t::mobius(sqrt_n);
 		auto factors = calc_factors(mu);
 		int64_t r = 0;
 		for (int k = 2; k <= sqrt_n; ++k)
