@@ -4,14 +4,8 @@
 
 namespace algorithm_lib
 {
-	template<typename T = int64_t, int64_t MOD = 1000000007>
-	inline T mod(T v)
-	{
-		return v % MOD;
-	}
-
 	template<typename T = int64_t>
-	inline T mod(T v, T m)
+	inline T mod(T v, T m = 1000000007)
 	{
 		if (v >= 0)
 			return v % m;
@@ -19,7 +13,7 @@ namespace algorithm_lib
 			return (v % m + m) % m;
 	}
 
-	inline int64_t power_mod(int64_t a, int64_t p, int64_t m)
+	inline int64_t power_mod(int64_t a, int64_t p, int64_t m = 1000000007)
 	{
 		if (1 == p)
 			return a % m;
