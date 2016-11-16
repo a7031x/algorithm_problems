@@ -7,15 +7,23 @@ namespace algorithm_lib
 	{
 	public:
 		template<typename T>
-		static T gcd(T a, T b)
+		static T gcd(const T& a, const T& b)
 		{
-			while (b)
+			T va = a;
+			T vb = b;
+			while (vb)
 			{
-				auto r = a % b;
-				a = b;
-				b = r;
+				auto r = va % vb;
+				va = vb;
+				vb = r;
 			}
-			return a;
+			return va;
+		}
+
+		template<typename T, typename... U>
+		static T gcd(const T& a, const T& b, const U&... others)
+		{
+			return gcd(gcd(a, b), others...);
 		}
 
 		static std::vector<int> mobius(int n)
@@ -63,6 +71,20 @@ namespace algorithm_lib
 					if (k2 != (T)k)
 						r.push_back(k2);
 				}
+			}
+			return r;
+		}
+
+		template<typename T>
+		static std::vector<T> prime_factors(T n)
+		{
+			auto factors = factors_within(n);
+			std::vector<T> r;
+			while (n != 1)
+			{
+				auto factor = factors[n];
+				r.push_back(factor);
+				n /= factor;
 			}
 			return r;
 		}
