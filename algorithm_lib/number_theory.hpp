@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <math.h>
 
 namespace algorithm_lib
 {
@@ -78,13 +79,58 @@ namespace algorithm_lib
 		template<typename T>
 		static std::vector<T> prime_factors(T n)
 		{
-			auto factors = factors_within(n);
 			std::vector<T> r;
-			while (n != 1)
+			for (auto factor : { 2, 3, 5, 7 })
 			{
-				auto factor = factors[n];
-				r.push_back(factor);
-				n /= factor;
+				while (n && (n % factor == 0))
+				{
+					r.push_back(factor);
+					n /= factor;
+				}
+			}
+
+			auto factors = factors_within((T)sqrt(n));
+			for (size_t k = 11; k < factors.size(); ++k)
+			{
+				if ((T)k != factors[k])
+					continue;
+				while (n % (T)k == 0)
+				{
+					r.push_back((T)k);
+					n /= (T)k;
+				}
+			}
+			if(1 != n)
+				r.push_back(n);
+			return r;
+		}
+
+		static std::vector<int> primes_within(int n)
+		{
+			std::vector<int> r;
+			if (n < 2)
+				return r;
+			r.push_back(2);
+
+			std::vector<int> factors_within((n - 1) / 2);
+			for (int k = 3; k <= n; k += 2)
+				factors_within[(k - 3) / 2] = k;
+
+			for (int i = 3; i <= n; i += 2)
+			{
+				if (factors_within[(i - 3) / 2] != i)
+					continue;
+				for (int j = 3 * i; j <= n; j += i * 2)
+				{
+					factors_within[(j - 3) / 2] = i;
+				}
+			}
+
+			for (size_t k = 0; k < factors_within.size(); ++k)
+			{
+				auto factor = (int)k * 2 + 3;
+				if (factor == factors_within[k])
+					r.push_back(factor);
 			}
 			return r;
 		}
