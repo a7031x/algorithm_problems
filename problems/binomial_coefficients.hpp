@@ -1,4 +1,5 @@
 //https://www.hackerrank.com/challenges/binomial-coefficients
+//https://en.wikipedia.org/wiki/Lucas%27s_theorem
 #include <string>
 #include <iostream>
 #include <big_number.hpp>
