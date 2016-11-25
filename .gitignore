@@ -10,5 +10,6 @@ ipch
 /algorithm_problems.VC.VC.opendb
 /algorithm_problems.VC.db
 *.vspx
-*.VC.VC.opendb
+*.opendb
 *.VC.db
+
