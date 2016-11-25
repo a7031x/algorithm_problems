@@ -27,6 +27,18 @@ namespace algorithm_lib
 			return gcd(gcd(a, b), others...);
 		}
 
+		template<typename T>
+		static T lcm(const T& a, const T& b)
+		{
+			return a * b / gcd(a, b);
+		}
+
+		template<typename T, typename... U>
+		static T lcm(const T& a, const T& b, const U&... others)
+		{
+			return lcm(lcm(a, b), others...);
+		}
+
 		static std::vector<int> mobius(int n)
 		{
 			std::vector<int> r(n + 1, -1);
