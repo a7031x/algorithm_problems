@@ -1,6 +1,6 @@
 #pragma once
-#include <stdint.h>
 #include <memory.h>
+#include <unordered_map>
 
 namespace algorithm_lib
 {
@@ -79,10 +79,11 @@ namespace algorithm_lib
 			if (1 == r)
 				break;
 		} while (true);
-		return mod(mat[1][0], m);
+		return (T)mod(mat[1][0], m);
 	}
 
-	inline int64_t power_mod(int64_t a, int64_t p, int64_t m = m1e9n7)
+	template<typename T>
+	inline T power_mod(const T& a, const T& p, const T& m = m1e9n7)
 	{
 		if (0 > p)
 			return modular_multiplicative_inverse(power_mod(a, -p, m), m);
@@ -92,11 +93,38 @@ namespace algorithm_lib
 		if (0 == p)
 			return 1;
 
-		int64_t r = power_mod(a, p / 2, m);
+		T r = power_mod(a, p / 2, m);
 		r = r * r % m;
 		if (p & 1)
 			return r * a % m;
 		else
 			return r;
+	}
+
+	template<typename T>
+	inline T dlog(const T& a, const T& n, const T& e)
+	{
+		T sqrt_n = (T)sqrt(n);
+		std::vector<T> s0((size_t)sqrt_n);
+		std::unordered_map<T, size_t> vmap;
+		s0[0] = 1;
+		vmap[1] = 0;
+		for (size_t k = 1; k < (size_t)sqrt_n; ++k)
+		{
+			s0[k] = s0[k - 1] * a % n;
+			vmap[s0[k]] = k;
+		}
+
+		auto ak = power_mod(a, -sqrt_n, n);
+		auto r = e;
+		for (T k = sqrt_n; k < n; k += sqrt_n)
+		{
+			r = mod(r * ak, n);
+			auto it = vmap.find(r);
+			if (vmap.end() != it)
+				return mod(it->second + k, n - 1);
+		}
+
+		return -1;
 	}
 }

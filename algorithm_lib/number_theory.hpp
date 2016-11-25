@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <math.h>
+#include <unordered_set>
 
 namespace algorithm_lib
 {
@@ -117,6 +118,14 @@ namespace algorithm_lib
 			return r;
 		}
 
+		template<typename T>
+		static std::vector<T> distinct_prime_factors(T n)
+		{
+			auto r0 = prime_factors(n);
+			std::unordered_set<T> r(r0.begin(), r0.end());
+			return std::vector<T>(r.cbegin(), r.cend());
+		}
+
 		static std::vector<int> primes_within(int n)
 		{
 			std::vector<int> r;
@@ -145,6 +154,37 @@ namespace algorithm_lib
 					r.push_back(factor);
 			}
 			return r;
+		}
+
+		template<typename T>
+		static bool is_primitive_root(const T& p, const std::vector<T>& factors, const T& candidate)
+		{
+			for (auto factor : factors)
+			{
+				factor = (p - 1) / factor;
+				if (power_mod(candidate, factor, p) == 1)
+					return false;
+			}
+			return true;
+		}
+
+		template<typename T>
+		static T find_primitive_root(const T& p, const std::vector<T>& factors)
+		{
+			for (T r = 2; ; ++r)
+			{
+				for (auto factor : factors)
+					if (is_primitive_root(p, factors, r))
+						return r;
+			}
+			return 0;
+		}
+
+		template<typename T>
+		static T find_primitive_root(const T& p)
+		{
+			auto factors = distinct_prime_factors(p - 1);
+			return find_primitive_root(p, factors);
 		}
 	};
 }
