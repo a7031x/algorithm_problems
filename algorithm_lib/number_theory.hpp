@@ -35,7 +35,7 @@ namespace algorithm_lib
 		template<typename T>
 		static T lcm(const T& a, const T& b)
 		{
-			return a * b / gcd(a, b);
+			return T((int64_t)a * b / gcd(a, b));
 		}
 
 		template<typename T, typename... U>
@@ -138,6 +138,21 @@ namespace algorithm_lib
 			return std::vector<T>(r.cbegin(), r.cend());
 		}
 
+	/*	template<typename T>
+		static T order(const T& x, const T& p, const std::vector<T>& factors)
+		{
+			if (1 == x % p)
+				return 1;
+
+			for (auto factor : factors)
+			{
+				auto r = (p - 1) / factor;
+				if (power_mod<int64_t>(x, r, p) == 1)
+					return r;
+			}
+			return p - 1;
+		}*/
+
 		static std::vector<int> primes_within(int n)
 		{
 			std::vector<int> r;
@@ -181,9 +196,11 @@ namespace algorithm_lib
 		}
 
 		template<typename T>
-		static T find_primitive_root(const T& p, const std::vector<T>& factors)
+		static T find_primitive_root(const T& p, const std::vector<T>& factors, const T& start)
 		{
-			for (T r = 2; ; ++r)
+			if (2 == p)
+				return 3;
+			for (T r = start; ; ++r)
 			{
 				for (auto factor : factors)
 					if (is_primitive_root(p, factors, r))
@@ -193,10 +210,10 @@ namespace algorithm_lib
 		}
 
 		template<typename T>
-		static T find_primitive_root(const T& p)
+		static T find_primitive_root(const T& p, const T& start = 2)
 		{
 			auto factors = distinct_prime_factors(p - 1);
-			return find_primitive_root(p, factors);
+			return find_primitive_root(p, factors, start);
 		}
 
 		template<typename T = int64_t, typename U = int64_t>
@@ -265,6 +282,9 @@ namespace algorithm_lib
 		template<typename T>
 		static T modular_multiplicative_inverse(const T& a, const T& m)
 		{
+			if (a >= m)
+				return -1;
+
 			int64_t mat[2][2] = { 1, 0, 0, 1 };
 			T b = m;
 			T va = a;
@@ -282,13 +302,14 @@ namespace algorithm_lib
 		}
 
 		template<typename T>
-		static T modular_multiplicative_inverse(const T& a, const T& b, const T& m)
+		static T modular_multiplicative_inverse(const T& a, T b, const T& m)
 		{
+			b %= m;
 			auto g = gcd(a, m);
 			if (b / g * g != b)
 				return -1;
 			auto r = modular_multiplicative_inverse(a / g, m / g);
-			r = mod(r * b / g, m / g);
+			r = (T)mod((int64_t)r * b / g, m / g);
 			return r;
 		}
 
@@ -304,21 +325,25 @@ namespace algorithm_lib
 				return 1;
 
 			T r = power_mod(a, p / 2, m);
-			r = r * r % m;
+			r = (int)((int64_t)r * r % m);
 			if (p & 1)
-				return r * a % m;
+				return (int)((int64_t)r * a % m);
 			else
 				return r;
 		}
 
 		template<typename T>
-		static std::unordered_map<T, size_t> dlog_precalc(const T& a, const T& n)
+		static std::unordered_map<T, size_t> dlog_precalc(const T& a, const T& n, T len = 0)
 		{
-			T sqrt_n = (T)ceil(sqrt(n));
+			if (0 == len)
+				len = (T)ceil(sqrt(n));
+			else
+				len = std::min(len, n);
+
 			std::unordered_map<T, size_t> vmap;
 			T s0 = 1;
 			vmap[1] = 0;
-			for (size_t k = 1; k < (size_t)sqrt_n; ++k)
+			for (size_t k = 1; k < (size_t)len; ++k)
 			{
 				s0 = (T)mod((int64_t)s0 * a, n);
 				vmap[s0] = k;
@@ -329,15 +354,18 @@ namespace algorithm_lib
 		template<typename T>
 		static T dlog(const T& a, const T& n, const T& e, const std::unordered_map<T, size_t>& precalc)
 		{
-			T sqrt_n = (T)ceil(sqrt(n));
-			auto ak = power_mod<int64_t>(a, -sqrt_n, n);
+			if (0 == a % n)
+				return -1;
+
+			T len = (T)precalc.size();
+			auto ak = power_mod<int64_t>(a, -len, n);
 			auto r = e;
-			for (T k = sqrt_n; k < n; k += sqrt_n)
+			for (T k = 0; k < n; k += len)
 			{
-				r = (T)mod(r * ak, n);
 				auto it = precalc.find(r);
 				if (precalc.end() != it)
 					return mod(it->second + k, n - 1);
+				r = (T)mod(r * ak, n);
 			}
 
 			return -1;

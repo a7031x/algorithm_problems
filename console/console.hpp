@@ -53,6 +53,16 @@ namespace console
 		std::cin.rdbuf(ins.rdbuf());
 	}
 
+	inline void redirect_outout(const std::string& file)
+	{
+		static std::ofstream os;
+		if (os.is_open())
+			os.close();
+		os.open(file, std::ios::trunc);
+		os.open(file);
+		std::cout.rdbuf(os.rdbuf());
+	}
+
 	inline void redirect_string(const std::string& text)
 	{
 		static std::stringstream ss;
