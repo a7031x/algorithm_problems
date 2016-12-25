@@ -1,5 +1,5 @@
 //https://www.hackerrank.com/challenges/closest-number
-#include <mod.hpp>
+#include <number_theory.hpp>
 #include <limits>
 #include <iostream>
 
@@ -20,7 +20,7 @@ namespace closest_number
 		{
 			return 0;
 		}
-		int64_t ab = algorithm_lib::power_mod(a, b, std::numeric_limits<int64_t>::max());
+		int64_t ab = algorithm_lib::number_theory_t::power_mod(a, b, std::numeric_limits<int64_t>::max());
 		return closer_number(ab / x * x, ab / x * x + x, ab);
 	}
 

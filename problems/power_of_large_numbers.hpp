@@ -1,7 +1,7 @@
 //https://www.hackerrank.com/challenges/power-of-large-numbers
 #include <string>
 #include <iostream>
-#include <mod.hpp>
+#include <number_theory.hpp>
 
 namespace power_of_large_numbers
 {
@@ -12,15 +12,15 @@ namespace power_of_large_numbers
 		for (auto c : a)
 		{
 			c -= '0';
-			ia = algorithm_lib::mod(ia * 10 + c);
+			ia = algorithm_lib::number_theory_t::mod(ia * 10 + c);
 		}
 
 		for (auto c : b)
 		{
 			c -= '0';
-			ib = algorithm_lib::mod(ib * 10 + c, algorithm_lib::m1e9n7 - 1);
+			ib = algorithm_lib::number_theory_t::mod(ib * 10 + c, algorithm_lib::m1e9n7 - 1);
 		}
-		return algorithm_lib::power_mod(ia, ib);
+		return algorithm_lib::number_theory_t::power_mod(ia, ib);
 	}
 
 	inline void solve()

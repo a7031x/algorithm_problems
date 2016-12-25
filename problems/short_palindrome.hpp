@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <mod.hpp>
+#include <number_theory.hpp>
 
 namespace short_palindrome
 {
@@ -19,11 +19,11 @@ namespace short_palindrome
 		{
 			c -= 'a';
 			for (size_t k = 0; k < 26; ++k)
-				sum = algorithm_lib::mod(sum + third_input[c][k]);
+				sum = algorithm_lib::number_theory_t::mod(sum + third_input[c][k]);
 			for (size_t k = 0; k < 26; ++k)
 			{
-				third_input[k][c] = algorithm_lib::mod(third_input[k][c] + second_input[k][c]);
-				second_input[k][c] = algorithm_lib::mod(second_input[k][c] + first_input[k]);
+				third_input[k][c] = algorithm_lib::number_theory_t::mod(third_input[k][c] + second_input[k][c]);
+				second_input[k][c] = algorithm_lib::number_theory_t::mod(second_input[k][c] + first_input[k]);
 			}
 			++first_input[c];
 		}

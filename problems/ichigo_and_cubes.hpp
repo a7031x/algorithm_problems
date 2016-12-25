@@ -1,6 +1,6 @@
 //https://www.hackerrank.com/challenges/ichigo-and-cubes
 #include <iostream>
-#include <mod.hpp>
+#include <number_theory.hpp>
 
 namespace ichigo_and_cubes
 {
@@ -13,7 +13,7 @@ namespace ichigo_and_cubes
 		auto y = (b / algorithm_lib::m1e9n7) & ~1;
 		a -= x * algorithm_lib::m1e9n7;
 		b -= y * algorithm_lib::m1e9n7;
-		return algorithm_lib::mod(a * b / 2);
+		return algorithm_lib::number_theory_t::mod(a * b / 2);
 	}
 
 	inline void solve()
@@ -26,8 +26,8 @@ namespace ichigo_and_cubes
 			std::cin >> p >> q >> r;
 			
 			auto s0 = uncut_cubes(p, q) + uncut_cubes(p, r) + uncut_cubes(q, r);
-			auto s1 = algorithm_lib::mod(p + q + r - 2);
-			std::cout << algorithm_lib::mod(s0 + s1) << std::endl;
+			auto s1 = algorithm_lib::number_theory_t::mod(p + q + r - 2);
+			std::cout << algorithm_lib::number_theory_t::mod(s0 + s1) << std::endl;
 		}
 	}
 }

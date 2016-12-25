@@ -4,6 +4,8 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <memory.h>
+#include <limits>
+#include <list>
 
 namespace algorithm_lib
 {
@@ -51,6 +53,19 @@ namespace algorithm_lib
 			for (int i = 2; i <= n; ++i)
 				for (int j = i * 2; j <= n; j += i)
 					r[j] -= r[i];
+			return r;
+		}
+
+		static std::vector<std::vector<int>> batch_factors(const std::vector<int>& mu)
+		{
+			int n = (int)mu.size() - 1;
+			std::vector<std::vector<int>> r(n + 1);
+			for (int i = 1; i <= n; ++i)
+			{
+				if (mu[i])
+					for (int j = i; j <= n; j += i)
+						r[j].push_back(i);
+			}
 			return r;
 		}
 
@@ -220,9 +235,9 @@ namespace algorithm_lib
 		static T mod(const T& v, const U& m = m1e9n7)
 		{
 			if (v >= 0)
-				return v % m;
+				return (T)(v % m);
 			else
-				return (v % m + m) % m;
+				return (T)((v % m + m) % m);
 		}
 
 		template<typename T, typename U>
@@ -375,6 +390,31 @@ namespace algorithm_lib
 		static T dlog(const T& a, const T& n, const T& e)
 		{
 			return dlog(a, n, e, dlog_precalc(a, n));
+		}
+
+		static std::vector<std::vector<int>> coprime_pairs(int n)
+		{
+			std::vector<std::vector<int>> r(n + 1);
+			std::list<std::pair<int, int>> q;
+			q.push_back({ 2, 1 });
+			q.push_back({ 3, 1 });
+			while (q.size())
+			{
+				auto& p = q.front();
+				r[p.first].push_back(p.second);
+				std::pair<int, int> p1 = { p.first * 2 - p.second, p.first };
+				std::pair<int, int> p2 = { p.first * 2 + p.second, p.first };
+				std::pair<int, int> p3 = { p.second * 2 + p.first, p.second };
+				if (p1.first <= n)
+					q.push_back(p1);
+				if (p2.first <= n)
+					q.push_back(p2);
+				if (p3.first <= n)
+					q.push_back(p3);
+				q.pop_front();
+			}
+
+			return r;
 		}
 	};
 }

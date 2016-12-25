@@ -5,7 +5,7 @@
 #include <list>
 #include <algorithm>
 #include <reg_state_machine.hpp>
-#include <mod.hpp>
+#include <number_theory.hpp>
 
 namespace count_strings
 {
@@ -233,8 +233,8 @@ namespace count_strings
 			{
 				int64_t r = 0;
 				for (size_t k = 0; k < right.size(); ++k)
-					r += algorithm_lib::mod(left[i][k] * right[k][j]);
-				m[i][j] = algorithm_lib::mod(r);
+					r += algorithm_lib::number_theory_t::mod(left[i][k] * right[k][j]);
+				m[i][j] = algorithm_lib::number_theory_t::mod(r);
 			}
 		}
 		return m;
@@ -275,7 +275,7 @@ namespace count_strings
 		for (size_t k = 1; k < states.size(); ++k)
 			if (states[k]->terminal)
 				r += coef[0][k];
-		return algorithm_lib::mod(r);
+		return algorithm_lib::number_theory_t::mod(r);
 	}
 
 	inline void solve()

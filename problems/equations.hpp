@@ -2,7 +2,6 @@
 #include <unordered_map>
 #include <iostream>
 #include <number_theory.hpp>
-#include <mod.hpp>
 
 namespace equations
 {
@@ -23,7 +22,7 @@ namespace equations
 		int64_t r = 1;
 		for (auto kv : factors)
 		{
-			r = algorithm_lib::mod(r * (kv.second * 2 + 1), m);
+			r = algorithm_lib::number_theory_t::mod(r * (kv.second * 2 + 1), m);
 		}
 		return (int)r;
 	}

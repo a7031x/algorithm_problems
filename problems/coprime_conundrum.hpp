@@ -38,32 +38,6 @@ namespace coprime_conundrum
 		return r;
 	}
 
-	inline std::vector<std::vector<int>> pairs(int n)
-	{
-		std::vector<std::vector<int>> r(n + 1);
-		std::list<std::pair<int, int>> q;
-		q.push_back({ 2, 1 });
-		q.push_back({ 3, 1 });
-		while (q.size())
-		{
-			auto& p = q.front();
-			r[p.first].push_back(p.second);
-			std::pair<int, int> p1 = { p.first * 2 - p.second, p.first };
-			std::pair<int, int> p2 = { p.first * 2 + p.second, p.first };
-			std::pair<int, int> p3 = { p.second * 2 + p.first, p.second };
-			if (p1.first <= n)
-				q.push_back(p1);
-			if (p2.first <= n)
-				q.push_back(p2);
-			if (p3.first <= n)
-				q.push_back(p3);
-			q.pop_front();
-		}
-		for (auto& v : r)
-			std::sort(v.begin(), v.end());
-		return r;
-	}
-
 	inline std::vector<int> calc_max_factors(int n)
 	{
 		std::vector<int> r(n + 1);
@@ -126,7 +100,7 @@ namespace coprime_conundrum
 	{
 		int sqrt_n = (int)sqrt(n);
 		auto max_factors = calc_max_factors(sqrt_n);
-		auto pairs_cache = pairs(sqrt_n);
+		auto pairs_cache = algorithm_lib::number_theory_t::coprime_pairs(sqrt_n);
 		int64_t r = 0;
 		for (int k = 2; k <= sqrt_n; ++k)
 			r += pairs(max_factors, pairs_cache, k, n / k);

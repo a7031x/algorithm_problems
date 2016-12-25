@@ -1,6 +1,6 @@
 #include <vector>
 #include <string>
-#include <mod.hpp>
+#include <number_theory.hpp>
 
 namespace algorithm_lib
 {
@@ -30,7 +30,7 @@ namespace algorithm_lib
 				cache = count_with_cache(start_a + 1, start_b)
 					+ count_with_cache(start_a, start_b + 1) - count_with_cache(start_a + 1, start_b + 1);
 			}
-			cache = algorithm_lib::mod<int64_t, _Mod>(cache);
+			cache = algorithm_lib::number_theory_t::mod<int64_t, _Mod>(cache);
 			return cache;
 		}
 

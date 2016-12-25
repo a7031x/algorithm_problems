@@ -1,6 +1,6 @@
 //https://www.hackerrank.com/challenges/eulers-criterion
 //https://en.wikipedia.org/wiki/Euler%27s_criterion
-#include <mod.hpp>
+#include <number_theory.hpp>
 #include <iostream>
 
 namespace euler_criterion
@@ -11,7 +11,7 @@ namespace euler_criterion
 			return 1 >= a;
 		if (0 == a)
 			return true;
-		return algorithm_lib::power_mod(a, (p - 1) / 2, p) == 1;
+		return algorithm_lib::number_theory_t::power_mod(a, (p - 1) / 2, p) == 1;
 	}
 
 	inline void solve()

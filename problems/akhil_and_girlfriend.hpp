@@ -1,7 +1,7 @@
 //https://www.hackerrank.com/challenges/akhil-and-gf?h_r=next-challenge&h_v=zen
 #include <unordered_map>
 #include <iostream>
-#include <mod.hpp>
+#include <number_theory.hpp>
 
 namespace akhil_and_girlfriend
 {
@@ -10,7 +10,7 @@ namespace akhil_and_girlfriend
 		auto it = cache.find(n);
 		if (cache.end() != it)
 			return it->second;
-		return cache[n] = algorithm_lib::power_mod(10, n, m);
+		return cache[n] = algorithm_lib::number_theory_t::power_mod<int64_t>(10, n, m);
 	}
 
 	inline int64_t solve(int64_t n, int m, int c,
@@ -23,7 +23,7 @@ namespace akhil_and_girlfriend
 		if (result_cache.end() != it)
 			return it->second;
 
-		return result_cache[n] = algorithm_lib::mod(
+		return result_cache[n] = algorithm_lib::number_theory_t::mod(
 			solve(n - n / 2, m, c, result_cache, power_cache) * power_mod(n / 2, m, power_cache) +
 			solve(n / 2, m, c, result_cache, power_cache), m);
 	}
