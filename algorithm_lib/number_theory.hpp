@@ -69,6 +69,30 @@ namespace algorithm_lib
 			return r;
 		}
 
+		static std::vector<std::vector<int>> batch_factors(int n)
+		{
+			std::vector<std::vector<int>> r(n + 1);
+			for (int i = 1; i <= n; ++i)
+			{
+				for (int j = i; j <= n; j += i)
+					r[j].push_back(i);
+			}
+			return r;
+		}
+
+		static std::vector<std::vector<int>> batch_prime_factors(int n)
+		{
+			std::vector<std::vector<int>> r(n + 1);
+			for (int i = 2; i <= n; ++i)
+			{
+				if (0 != r[i].size())
+					continue;
+				for (int j = i; j <= n; j += i)
+					r[j].push_back(i);
+			}
+			return r;
+		}
+
 		template<typename T>
 		static std::vector<T> factors_within(T n)
 		{
