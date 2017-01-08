@@ -6,6 +6,7 @@
 #include <memory.h>
 #include <limits>
 #include <list>
+#include <algorithm>
 
 namespace algorithm_lib
 {
@@ -241,9 +242,8 @@ namespace algorithm_lib
 				return 3;
 			for (T r = start; ; ++r)
 			{
-				for (auto factor : factors)
-					if (is_primitive_root(p, factors, r))
-						return r;
+				if (is_primitive_root(p, factors, r))
+					return r;
 			}
 			return 0;
 		}
