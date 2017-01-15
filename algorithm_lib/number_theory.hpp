@@ -116,17 +116,15 @@ namespace algorithm_lib
 		template<typename T>
 		static std::vector<T> factors_of(T n)
 		{
-			auto factors = factors_within((T)sqrt(n));
 			std::vector<T> r;
-			for (size_t k = 1; k < factors.size(); ++k)
+			size_t sqrt_n = (size_t)sqrt(n);
+			for (size_t k = 1; k <= sqrt_n; ++k)
 			{
-				if ((T)k != factors[k])
-					continue;
 				if (n % (T)k == 0)
 				{
 					r.push_back((T)k);
 					auto k2 = n / (T)k;
-					if (k2 != (T)k)
+					if(k2 != k)
 						r.push_back(k2);
 				}
 			}
@@ -366,7 +364,7 @@ namespace algorithm_lib
 			T r = power_mod(a, p / 2, m);
 			r = (int)((int64_t)r * r % m);
 			if (p & 1)
-				return (int)((int64_t)r * a % m);
+				return T((int64_t)r * (a % m) % m);
 			else
 				return r;
 		}
