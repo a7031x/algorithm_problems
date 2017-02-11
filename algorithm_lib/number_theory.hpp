@@ -176,6 +176,51 @@ namespace algorithm_lib
 			return std::vector<T>(r.cbegin(), r.cend());
 		}
 
+		template<typename T>
+		static std::vector<T> n_factors(int n, const T& m)
+		{
+			std::vector<T> r(n + 1);
+			r[0] = 1;
+			for (int k = 1; k <= n; ++k)
+				r[k] = (T)mod((int64_t)r[k - 1] * k, m);
+			return r;
+		}
+
+		template<typename T>
+		static std::vector<T> system_coefficients(int64_t n, const T& m)
+		{
+			std::vector<T> r;
+			while (n)
+			{
+				r.push_back((T)(n % m));
+				n /= m;
+			}
+			return r;
+		}
+
+		template<typename T>
+		static T binomial_coeficient(const std::vector<T>& factors, int64_t n, int64_t r, const T& m)
+		{
+			auto ns = system_coefficients(n, m);
+			auto rs = system_coefficients(r, m);
+			if (ns.size() > rs.size())
+				ns.resize(rs.size());
+
+			T res = 1;
+			for (size_t k = 0; k < ns.size(); ++k)
+			{
+				auto ni = ns[k];
+				auto ri = rs[k];
+				if (ri > ni)
+					return 0;
+				auto d = (T)mod<int64_t>((int64_t)factors[(size_t)(ni - ri)] * factors[(size_t)ri], m);
+				auto n = factors[ni];
+				auto r = modular_multiplicative_inverse(d, n, m);
+				res = (T)mod<int64_t>((int64_t)res * r, m);
+			}
+			return res;
+		}
+
 	/*	template<typename T>
 		static T order(const T& x, const T& p, const std::vector<T>& factors)
 		{
@@ -316,8 +361,8 @@ namespace algorithm_lib
 			}
 		}
 
-		template<typename T>
-		static T modular_multiplicative_inverse(const T& a, const T& m)
+		template<typename T, typename U>
+		static T modular_multiplicative_inverse(const T& a, const U& m)
 		{
 			if (a >= m)
 				return -1;
@@ -350,8 +395,8 @@ namespace algorithm_lib
 			return r;
 		}
 
-		template<typename T>
-		static T power_mod(const T& a, const T& p, const T& m = m1e9n7)
+		template<typename T, typename U = int>
+		static T power_mod(const T& a, const T& p, const U& m = m1e9n7)
 		{
 			if (0 > p)
 				return modular_multiplicative_inverse(power_mod(a, -p, m), m);
