@@ -1,6 +1,6 @@
 //https://www.hackerrank.com/challenges/largest-rectangle
 #include <vector>
-#include <map>
+#include <stack>
 #include <algorithm>
 #include <iostream>
 
@@ -8,29 +8,19 @@ namespace largest_rectangle
 {
 	inline int64_t solve(const std::vector<int>& histogram)
 	{
-		std::map<int, int> h_positions;
+		std::stack<int> s;
 		int64_t max_area = 0;
-		int position = 0;
-		for (auto h : histogram)
+		for (int position = 0; position < (int)histogram.size(); ++position)
 		{
-			auto it = h_positions.lower_bound(h);
-			if (h_positions.end() == it)
-			{
-				h_positions[h] = position;
-			}
+			auto h = s.empty() ? -1 : histogram[s.top()];
+			if (h < histogram[position])
+				s.push(position);
 			else
 			{
-				max_area = std::max(max_area, (int64_t)h * (position - it->second + 1));
-
-				h_positions[h] = it->second;
-
-				for (auto last = h_positions.rbegin(); last->first > h; last = h_positions.rbegin())
-				{
-					max_area = std::max(max_area, (int64_t)last->first * (position - last->second));
-					h_positions.erase(std::prev(h_positions.end()));
-				}
+				s.pop();
+				max_area = std::max((int64_t)h * (position - (s.empty() ? 0 : s.top() + 1)), max_area);
+				--position;
 			}
-			++position;
 		}
 
 		return max_area;
