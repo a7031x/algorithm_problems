@@ -52,12 +52,7 @@ public:
 			return findKth(first1 + rank1.second, last1, first2 + rank2.second, last2, k - rank2.second - rank1.second);
 		}
 		else
-		{
-			if (rank1.second + rank2.first > k)
-				return *mid;
-			else
-				return findKth(mid, mid, first2 + rank2.first, first2 + rank2.second, k - rank1.second - rank2.first);
-		}
+			return *mid;
 	}
 
 	template<typename Iterator>
